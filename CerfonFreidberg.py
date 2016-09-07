@@ -563,7 +563,7 @@ class CerfonFreidberg:
         """
         Iteratively calculate the integration constant A and the value of Psi0 from toroidal beta, betat, and plasma current, I.
         """
-        self._calculateAAndPsi0(self,self._testfuncBetatAndCurrent,betat,I)
+        self._calculateAAndPsi0(self._testfuncBetatAndCurrent,betat,I)
 
     def q(self,psiVal):
         """
