@@ -615,6 +615,22 @@ class CerfonFreidberg:
         """
         return lambda R,Z: -self.Psi0**2/self.mu0/self.R0**4*(1-self.A)*self._psi_xy()(R/self.R0,Z/self.R0)
 
+    def pressurePsiN(self, psinorm):
+        """
+        Returns the pressure at normalised psi (0 = magnetic axis, 1 = plasma edge)
+        """
+        psi = 1 - psinorm # psi in Cerfon-Freidberg 2010 goes from 1 on axis to 0 at edge
+        
+        return self.Psi0**2 * (1. - self.A)*psi / (self.mu0*self.R0**4)
+
+    def fpolPsiN(self, psinorm):
+        """
+        Returns the poloidal current function f = R*Bt at given normalised psi
+        (0 = magnetic axis, 1 = plasma edge)
+        """
+        psi = 1 - psinorm # psi in Cerfon-Freidberg 2010 goes from 1 on axis to 0 at edge
+        return self.R0*numpy.sqrt(self.B0**2 - 2.*self.Psi0**2*self.A*psi/self.R0**4)
+
     def Bt(self):
         """
         Returns a function that evaluates the toroidal magnetic field at (R,Z)
