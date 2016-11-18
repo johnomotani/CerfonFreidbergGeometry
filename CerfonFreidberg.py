@@ -91,7 +91,7 @@ class CerfonFreidberg:
         self.mu0 = 4.e-7*numpy.pi
         self.Cp = None # call calculateCp to get this value, if needed
 
-        if A:
+        if A is not None:
             # Can only actually solve for coefficients if A is given, otherwise calculateAAndPsi0FromBetatAndCurrent() must be called to calculate A
             
             alph = numpy.arcsin(delt)
@@ -298,6 +298,10 @@ class CerfonFreidberg:
         self.xmax = xmax
         self.ymin = ymin
         self.ymax = ymax
+        if not self.xmin>0.:
+            raise ValueError("xmin for plotting should be positive to avoid NaN at x=0")
+        if not self.xmax>self.xmin:
+            raise ValueError("xmax for plotting should be greater than xmin")
 
     def plotFluxSurfaces(self):
         """
