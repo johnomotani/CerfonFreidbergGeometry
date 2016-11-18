@@ -71,7 +71,6 @@ class CerfonFreidberg:
             raise Exception
 
         self.init(epsi,kapp,delt,xsep,ysep,A,R0,B0,Psi0)
-        self.initPlotting(xmin,xmax,ymin,ymax)
 
     def init(self,epsi,kapp,delt,xsep,ysep,A,R0,B0,Psi0=None):
         """
@@ -90,6 +89,11 @@ class CerfonFreidberg:
 
         self.mu0 = 4.e-7*numpy.pi
         self.Cp = None # call calculateCp to get this value, if needed
+
+        self.xmin = .8*(1.-self.epsi)
+        self.xmax = 1.+self.epsi+.2*(1.-self.epsi)
+        self.ymin = 1.2*self.ysep
+        self.ymax = 1.2*self.epsi*self.kapp
 
         if A is not None:
             # Can only actually solve for coefficients if A is given, otherwise calculateAAndPsi0FromBetatAndCurrent() must be called to calculate A
@@ -290,7 +294,7 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c11'),c11),
             #                            (sympy.Symbol('c12'),c12)])
 
-    def initPlotting(self,xmin,xmax,ymin,ymax):
+    def setPlotLimits(self,xmin,xmax,ymin,ymax):
         """
         Set limits for plotting of flux surfaces, in x,y coordinates.
         """
