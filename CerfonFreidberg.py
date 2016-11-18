@@ -298,10 +298,6 @@ class CerfonFreidberg:
         self.xmax = xmax
         self.ymin = ymin
         self.ymax = ymax
-        if not self.xmin>0.:
-            raise ValueError("xmin for plotting should be positive to avoid NaN at x=0")
-        if not self.xmax>self.xmin:
-            raise ValueError("xmax for plotting should be greater than xmin")
 
     def plotFluxSurfaces(self):
         """
@@ -314,7 +310,10 @@ class CerfonFreidberg:
         psi = self._psi_xy()
         for i in range(100):
             psiArray[:,i] = psi(x1[i],y1)
-        psiAxis = psiArray.min()
+        if self.Psiaxis is None:
+            psiAxis = self._getpsiAxisForPlotting()
+        else:
+            psiAxis = self.Psiaxis/self.Psi0
         pyplot.contour(x1,y1,psiArray,numpy.linspace(-.1*psiAxis,psiAxis,15))
         pyplot.show()
 
@@ -350,6 +349,17 @@ class CerfonFreidberg:
         self.Zaxis = y*self.R0
         self.Psiaxis = psi*self.Psi0
         return self.Raxis, self.Zaxis, self.Psiaxis
+
+    def _getpsiAxisForPlotting(self):
+        """
+        Finds the maximum of Psi, which is the magnetic axis. Sets the values of Raxis, Zaxis and Psiaxis, and also returns them.
+        """
+        #if (not self.Raxis) or (not self.Zaxis) or (not self.Psiaxis):
+        result = scipy.optimize.minimize(lambda posArray: self._psi_xy()(posArray[0],posArray[1]),[1.,0.])
+        x = result.x[0]
+        y = result.x[1]
+        psi = self._psi_xy()(x,y)
+        return psi
 
     def _psi_xy(self):
         # normalised form
