@@ -204,8 +204,16 @@ class CerfonFreidbergSymmetric:
         psi = self.psi_xy()
         for i in range(100):
             psiArray[:,i] = psi(x1[i],y1)
+        psiArray = numpy.where(numpy.isnan(psiArray), 0.0, psiArray)
+        psiArray = psiArray + .005*y1[:, numpy.newaxis]
         psiAxis = psiArray.min()
-        pyplot.contour(x1,y1,psiArray,numpy.linspace(-.1*psiAxis,psiAxis,15))
+        contour_values = numpy.linspace(-.1*psiAxis,psiAxis,15)
+        #contour_values = numpy.linspace(-0.04*psiAxis,1.5*psiAxis,10)
+        print(psiAxis, contour_values)
+        if psiAxis < 0.0:
+            contour_values = contour_values[::-1]
+        pyplot.contour(x1,y1,psiArray,contour_values)
+        pyplot.colorbar()
         pyplot.show()
 
     def Psi(self):
