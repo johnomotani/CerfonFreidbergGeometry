@@ -67,7 +67,7 @@ class CerfonFreidberg:
             ymin = -2
             ymax = 1.6
         else:
-            print "Unknown machineName:",machineName
+            print("Unknown machineName:",machineName)
             raise Exception
 
         self.init(epsi,kapp,delt,xsep,ysep,A,R0,B0,Psi0)
@@ -149,24 +149,24 @@ class CerfonFreidberg:
                 # Psiaxis only makes sense if the value of Psi0 is known
                 self.getAxis() # Set the values of Raxis, Zaxis, Psiaxis
 
-            #print "c1",c1
-            #print "c2",c2
-            #print "c3",c3
-            #print "c4",c4
-            #print "c5",c5
-            #print "c6",c6
-            #print "c7",c7
-            #print "c8",c8
-            #print "c9",c9
-            #print "c10",c10
-            #print "c11",c11
-            #print "c12",c12
+            #print("c1",c1)
+            #print("c2",c2)
+            #print("c3",c3)
+            #print("c4",c4)
+            #print("c5",c5)
+            #print("c6",c6)
+            #print("c7",c7)
+            #print("c8",c8)
+            #print("c9",c9)
+            #print("c10",c10)
+            #print("c11",c11)
+            #print("c12",c12)
 
-            #print "test1",CerfonFreidberg._getpsi(1.+epsi,0.,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12)
-            #print "test2",CerfonFreidberg._getpsi(1.-epsi,0.,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12)
-            #print "test3",CerfonFreidberg._getpsi(1.-delt*epsi,kapp*epsi,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12)
-            #print "test4",CerfonFreidberg._getpsi(xsep,ysep,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12)
-            #print "test5",psi_y.subs([
+            #print("test1",CerfonFreidberg._getpsi(1.+epsi,0.,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12))
+            #print("test2",CerfonFreidberg._getpsi(1.-epsi,0.,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12))
+            #print("test3",CerfonFreidberg._getpsi(1.-delt*epsi,kapp*epsi,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12))
+            #print("test4",CerfonFreidberg._getpsi(xsep,ysep,A,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12))
+            #print("test5",psi_y.subs([
             #                            (x,1.+epsi),
             #                            (y,0.),
             #                            (sympy.Symbol('c1'),c1),
@@ -180,9 +180,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test6",psi_y.subs([
+            #print("test6",psi_y.subs([
             #                            (x,1.-epsi),
             #                            (y,0.),
             #                            (sympy.Symbol('c1'),c1),
@@ -196,9 +196,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test7",psi_x.subs([
+            #print("test7",psi_x.subs([
             #                            (x,1.-delt*epsi),
             #                            (y,kapp*epsi),
             #                            (sympy.Symbol('c1'),c1),
@@ -212,9 +212,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test8",psi_x.subs([
+            #print("test8",psi_x.subs([
             #                            (x,xsep),
             #                            (y,ysep),
             #                            (sympy.Symbol('c1'),c1),
@@ -228,9 +228,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test9",psi_y.subs([
+            #print("test9",psi_y.subs([
             #                            (x,xsep),
             #                            (y,ysep),
             #                            (sympy.Symbol('c1'),c1),
@@ -244,9 +244,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test10",(psi_yy+N1*psi_x).subs([
+            #print("test10",(psi_yy+N1*psi_x).subs([
             #                            (x,1.+epsi),
             #                            (y,0.),
             #                            (sympy.Symbol('c1'),c1),
@@ -260,9 +260,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test11",(psi_yy+N2*psi_x).subs([
+            #print("test11",(psi_yy+N2*psi_x).subs([
             #                            (x,1.-epsi),
             #                            (y,0.),
             #                            (sympy.Symbol('c1'),c1),
@@ -276,9 +276,9 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
-            #print "test12",(psi_xx+N3*psi_y).subs([
+            #print("test12",(psi_xx+N3*psi_y).subs([
             #                            (x,1.-delt*epsi),
             #                            (y,kapp*epsi),
             #                            (sympy.Symbol('c1'),c1),
@@ -292,7 +292,7 @@ class CerfonFreidberg:
             #                            (sympy.Symbol('c9'),c9),
             #                            (sympy.Symbol('c10'),c10),
             #                            (sympy.Symbol('c11'),c11),
-            #                            (sympy.Symbol('c12'),c12)])
+            #                            (sympy.Symbol('c12'),c12)]))
 
     def setPlotLimits(self,xmin,xmax,ymin,ymax):
         """
@@ -516,21 +516,21 @@ class CerfonFreidberg:
         return self.Psi0
 
     def _testfuncBetatAndCurrent(self,A,betat,I):
-        print "trying ",A
+        print("trying ",A)
         # Re-initialise with this value of A
         self.init(self.epsi,self.kapp,self.delt,self.xsep,self.ysep,A,self.R0,self.B0,self.Psi0)
         # Using the current as the test variable (solving for Psi0 with betat) seems to converge better??
-        print "Psi0",self.calculatePsi0FromCurrent(I)
+        print("Psi0",self.calculatePsi0FromCurrent(I))
         currentbetat = self.betat()
-        print "betat",currentbetat
-        print "testval",currentbetat-betat
-        print ""
+        print("betat",currentbetat)
+        print("testval",currentbetat-betat)
+        print("")
         #return self.betat()-betat
         return currentbetat - betat
-        #print "Psi0",self.calculatePsi0FromBetat(betat)
+        #print("Psi0",self.calculatePsi0FromBetat(betat))
         #thisCurrent = self.current()
-        #print "current",thisCurrent
-        #print "testval",thisCurrent - I
+        #print("current",thisCurrent)
+        #print("testval",thisCurrent - I)
         #return thisCurrent - I
 
     def _calculateAAndPsi0(self,testfunc,arg1,arg2):
@@ -552,7 +552,7 @@ class CerfonFreidberg:
                 testlower *= 2.
                 if testlower>=testupper:
                     raise ValueError("Failed to find good limits")
-                print "changing range to search to ("+str(testlower)+","+str(testupper)+")"
+                print("changing range to search to ("+str(testlower)+","+str(testupper)+")")
         # Now refine with high resolution, assuming that we are within testInterval of the accurate solution already
         testInterval = 0.04
         self.integrationGridSize = origN
@@ -574,8 +574,8 @@ class CerfonFreidberg:
                         raise error
                     else:
                         testInterval *= 2.
-                        print "testInterval",testInterval
-        print "found A =",self.A,"and Psi0 =",self.Psi0,"for arg1 =",arg1,"and arg2 =",arg2
+                        print("testInterval",testInterval)
+        print("found A =",self.A,"and Psi0 =",self.Psi0,"for arg1 =",arg1,"and arg2 =",arg2)
 
     def calculateAAndPsi0FromBetatAndCurrent(self,betat,I):
         """
@@ -604,15 +604,15 @@ class CerfonFreidberg:
         return q_integral
 
     def _testfuncBetatAndq(self,A,betat,q,psiVal):
-        print "trying ",A
+        print("trying ",A)
         # Re-initialise with this value of A
         self.init(self.epsi,self.kapp,self.delt,self.xsep,self.ysep,A,self.R0,self.B0,self.Psi0)
         # Using the current as the test variable (solving for Psi0 with betat) seems to converge better??
-        print "Psi0",self.calculatePsi0FromBetat(betat)
+        print("Psi0",self.calculatePsi0FromBetat(betat))
         currentq = self.q(psiVal)
-        print "q",currentq
-        print "testval",currentq-q
-        print ""
+        print("q",currentq)
+        print("testval",currentq-q)
+        print("")
         return currentq-q
 
     def calculateAAndPsi0FromBetatAndq(self,betat,q,psiVal):
@@ -750,36 +750,36 @@ class CerfonFreidberg:
                        + 2.*(self.R0*self.kapp*self.epsi-self.Zaxis*numpy.sin(theta))*numpy.sin(theta)**2 # catch high point and low point which are at kapp*epsi and -kapp*epsi
                      )
         if rguess*numpy.cos(theta)<-self.Raxis:
-            #print "option A"
+            #print("option A")
             # Avoid having R=0.
             rguess = -.999*self.Raxis/numpy.cos(theta)
         if PsiAtTheta(rguess)*self.Psiaxis<0.: # psi changes sign
-            #print "option B"
+            #print("option B")
             endpoint = rguess
         else:
-            #print "option C, rguess:",rguess
+            #print("option C, rguess:",rguess)
             result = scipy.optimize.minimize_scalar(lambda r: PsiAtTheta(r)/self.Psiaxis, bounds=(0.,rguess),method='bounded')
             r_max = result.x
             Psi_max = PsiAtTheta(r_max)
             endpoint = r_max
 
-        #print ""
+        #print("")
         #aval = self._findSeparatrix(theta)
         #psia = self._psi_xy()(1.+aval*numpy.cos(theta),aval*numpy.sin(theta))
-        #print "aval",aval
-        #print "psia",psia
-        #print "Psia",Psi(self.R0*(1.+aval*numpy.cos(theta)),self.R0*aval*numpy.sin(theta))
-        #print ""
-        #print "endpoint",endpoint
-        #print "theta",theta
-        #print "Psi at 0:",PsiAtTheta(0.),PsiAtTheta(0.)-PsiGrid[0]
-        #print "Psi at endpoint:",PsiAtTheta(endpoint),PsiAtTheta(endpoint)-PsiGrid[0]
-        ##print "Psi near endpoint",PsiAtTheta(endpoint-.1),PsiAtTheta(endpoint+.1)
-        #print "PsiGrid",PsiGrid
-        #print "PsiNGrid",psiNGrid
-        #print "Psiaxis",self.Psiaxis
-        #print "RAxis",self.Raxis
-        #print "ZAxis",self.Zaxis
+        #print("aval",aval)
+        #print("psia",psia)
+        #print("Psia",Psi(self.R0*(1.+aval*numpy.cos(theta)),self.R0*aval*numpy.sin(theta)))
+        #print("")
+        #print("endpoint",endpoint)
+        #print("theta",theta)
+        #print("Psi at 0:",PsiAtTheta(0.),PsiAtTheta(0.)-PsiGrid[0])
+        #print("Psi at endpoint:",PsiAtTheta(endpoint),PsiAtTheta(endpoint)-PsiGrid[0])
+        ##print("Psi near endpoint",PsiAtTheta(endpoint-.1),PsiAtTheta(endpoint+.1))
+        #print("PsiGrid",PsiGrid)
+        #print("PsiNGrid",psiNGrid)
+        #print("Psiaxis",self.Psiaxis)
+        #print("RAxis",self.Raxis)
+        #print("ZAxis",self.Zaxis)
 
         rGrid = numpy.zeros(PsiGrid.size)
         for i,PsiVal in enumerate(PsiGrid):
