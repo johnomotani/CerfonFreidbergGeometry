@@ -41,7 +41,7 @@ class CerfonFreidbergSymmetric:
             xmin = 0.5
             xmax = 1.5
             ymin = -0.8
-            ymax = 0.6
+            ymax = 0.8
         elif machineName == "NSTX":
             # ??? Ono, Masayuki, S. M. Kaye, Y-KM Peng, G. Barnes, W. Blanchard, M. D. Carter, J. Chrzanowski et al. "Exploration of spherical torus physics in the NSTX device." Nuclear Fusion 40, no. 3Y (2000): 557.
             epsi = 0.78
@@ -55,8 +55,8 @@ class CerfonFreidbergSymmetric:
             # plotting stuff
             xmin = 0
             xmax = 2
-            ymin = -2
-            ymax = 1.6
+            ymin = -2.5
+            ymax = 2.5
         else:
             print("Unknown machineName:",machineName)
             raise Exception
