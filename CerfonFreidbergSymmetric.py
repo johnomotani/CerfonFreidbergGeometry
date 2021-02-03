@@ -64,8 +64,9 @@ class CerfonFreidbergSymmetric:
         self.init(epsi,kapp,delt,A,R0,B0,Psi0)
         self.initPlotting(xmin,xmax,ymin,ymax)
 
-    def init(self,epsi,kapp,delt,A,R0,B0,Psi0=None):
+    def init(self,epsi,kapp,delt,A,R0,B0,Psi0=None, xpoint=True):
         # In principle Psi0 can be calculated from other quantities, e.g. toroidal beta, if not already known
+        # xpoint=True creates double-null equilibria, xpoint=False creates equilibria  without X-points
 
         self.epsi = epsi
         self.kapp = kapp
@@ -96,16 +97,28 @@ class CerfonFreidbergSymmetric:
             psi_yy = sympy.diff(psi_y,y)
 
             # solve for coefficients
-            s = sympy.solvers.solve( [psi.subs([(x,1.+epsi),(y,0.)]),
-                                      psi.subs([(x,1.-epsi),(y,0.)]),
-                                      psi.subs([(x,1.-delt*epsi),(y,kapp*epsi)]),
-                                      psi_x.subs([(x,1.-delt*epsi),(y,kapp*epsi)]),
-                                      (psi_yy+N1*psi_x).subs([(x,1.+epsi),(y,0.)]),
-                                      (psi_yy+N2*psi_x).subs([(x,1.-epsi),(y,0.)]),
-                                      (psi_xx+N3*psi_y).subs([(x,1.-delt*epsi),(y,kapp*epsi)])
-                                     ]
-                                     ,[c1,c2,c3,c4,c5,c6,c7]
-                                   )
+            if xpoint:
+                s = sympy.solvers.solve( [psi.subs([(x,1.+epsi),(y,0.)]),
+                                          psi.subs([(x,1.-epsi),(y,0.)]),
+                                          psi.subs([(x,1.-1.1*delt*epsi),(y,1.1*kapp*epsi)]),
+                                          psi_x.subs([(x,1.-1.1*delt*epsi),(y,1.1*kapp*epsi)]),
+                                          psi_y.subs([(x,1.-1.1*delt*epsi),(y,1.1*kapp*epsi)]),
+                                          (psi_yy+N1*psi_x).subs([(x,1.+epsi),(y,0.)]),
+                                          (psi_yy+N2*psi_x).subs([(x,1.-epsi),(y,0.)]),
+                                         ]
+                                         ,[c1,c2,c3,c4,c5,c6,c7]
+                                       )
+            else:
+                s = sympy.solvers.solve( [psi.subs([(x,1.+epsi),(y,0.)]),
+                                          psi.subs([(x,1.-epsi),(y,0.)]),
+                                          psi.subs([(x,1.-delt*epsi),(y,kapp*epsi)]),
+                                          psi_x.subs([(x,1.-delt*epsi),(y,kapp*epsi)]),
+                                          (psi_yy+N1*psi_x).subs([(x,1.+epsi),(y,0.)]),
+                                          (psi_yy+N2*psi_x).subs([(x,1.-epsi),(y,0.)]),
+                                          (psi_xx+N3*psi_y).subs([(x,1.-delt*epsi),(y,kapp*epsi)])
+                                         ]
+                                         ,[c1,c2,c3,c4,c5,c6,c7]
+                                       )
             # evaluate coefficients.
             self.c1 = s[c1]
             self.c2 = s[c2]
