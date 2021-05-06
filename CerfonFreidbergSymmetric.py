@@ -53,7 +53,7 @@ class CerfonFreidbergSymmetric:
             B0 = 0.3
             Psi0 = None
             # plotting stuff
-            xmin = 0
+            xmin = 0.01
             xmax = 2
             ymin = -2.5
             ymax = 2.5
