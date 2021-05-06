@@ -356,6 +356,26 @@ class CerfonFreidbergSymmetric:
         self.getAxis() # Now that Psi0 is known, can compute Psiaxis, so call getAxis now 
         return self.Psi0
 
+    def q(self,psiVal):
+        """
+        Calculate safety factor, q for some psi-surface
+        """
+        # Integral with unnormalised lengths (eventually): i.e. includes factor of R0
+        Ntheta = self.integrationGridSize
+        dtheta = 2.*numpy.pi/float(Ntheta)
+        thetaGrid = numpy.linspace(0.,2.*numpy.pi,Ntheta,endpoint=False)
+        R,Z,r = self.getFluxSurfaceGrid([psiVal],thetaGrid[:])
+        Bt = self.Bt()(R,Z)
+        dthetadR = -numpy.sin(thetaGrid)/r
+        dthetadZ = numpy.cos(thetaGrid)/r
+        JTimesR = (self.dPsidR()(R,Z)*dthetadZ-self.dPsidZ()(R,Z)*dthetadR) # J=B.Grad(theta)=Bp.Grad(theta)
+        q_integral = (Bt/JTimesR).sum()*dtheta
+
+        # Divide by integral(dtheta)
+        q_integral /= 2.*numpy.pi
+
+        return q_integral
+
     def _testfunc(self,A,betat,I):
         print("trying ",A)
         # Re-initialise with this value of A
@@ -407,6 +427,22 @@ class CerfonFreidbergSymmetric:
     def p(self):
         return lambda R,Z: -self.Psi0**2/self.mu0/self.R0**4*(1-self.A)*self.psi_xy()(R/self.R0,Z/self.R0)
 
+    def pressurePsiN(self, psinorm):
+        """
+        Returns the pressure at normalised psi (0 = magnetic axis, 1 = plasma edge)
+        """
+        psi = 1 - psinorm # psi in Cerfon-Freidberg 2010 goes from 1 on axis to 0 at edge
+
+        return self.Psi0**2 * (1. - self.A)*psi / (self.mu0*self.R0**4)
+
+    def fpolPsiN(self, psinorm):
+        """
+        Returns the poloidal current function f = R*Bt at given normalised psi
+        (0 = magnetic axis, 1 = plasma edge)
+        """
+        psi = 1 - psinorm # psi in Cerfon-Freidberg 2010 goes from 1 on axis to 0 at edge
+        return self.R0*numpy.sqrt(self.B0**2 - 2.*self.Psi0**2*self.A*psi/self.R0**4)
+
     def Bt(self):
         return lambda R,Z: numpy.sqrt(self.R0**2/R**2*(self.B0**2-2.*self.Psi0**2/self.R0**4*self.A*self.psi_xy()(R/self.R0,Z/self.R0)))
 
@@ -443,8 +479,10 @@ class CerfonFreidbergSymmetric:
     def BZ(self):
         return lambda R,Z: self.Psi0/self.R0*self.dpsidy_xy()(R/self.R0,Z/self.R0) / R
 
-    def getMinorRadiusGrid(self,theta,psiNGrid):
-        # Find minor radius of an array of psiN at some angle theta
+    def getMinorRadiusGrid(self,theta,psiNGrid,rguess=None):
+        """
+        Find the minor radius for an array of psiN at some angle theta
+        """
 
         if psiNGrid.ndim > 1:
             raise ValueError("psiNGrid has more than one dimension.")
@@ -456,18 +494,57 @@ class CerfonFreidbergSymmetric:
             # enumerate cannot handle 0d array
             psiNGrid = psiNGrid[numpy.newaxis]
 
-        PsiGrid = (1.-psiNGrid)*self.PsiAxis
+        PsiGrid = (1.-psiNGrid)*self.Psiaxis
 
         # Function to evalute Psi for a given minor radius
         Psi = self.Psi()
-        sign = self.PsiAxis/numpy.abs(self.PsiAxis)
-        PsiAtTheta = lambda r: sign*Psi(self.Raxis+r*numpy.cos(theta),self.Zaxis+r*numpy.sin(theta)) # sign so that this function always decreases away from the axis
-        # Find an endpoint where Psi has the opposite sign to PsiAxis
-        if PsiAtTheta(self.R0)*self.PsiAxis<0.:
-            endpoint = self.R0
+        sign = self.Psiaxis/numpy.abs(self.Psiaxis)
+        PsiAtTheta = lambda r: Psi(self.Raxis+r*numpy.cos(theta),self.Zaxis+r*numpy.sin(theta)) # sign so that this function always decreases away from the axis
+        # Find an endpoint where Psi has the opposite sign to Psiaxis
+        ##if PsiAtTheta(self.epsi*self.R0)*self.Psiaxis<0.:
+        ##    endpoint = self.epsi*self.R0
+        ##else:
+        ##    result = scipy.optimize.minimize_scalar(lambda r: sign*PsiAtTheta(r), bounds=(0.,2.*self.R0),method='bounded')
+        ##    endpoint = result.x
+        ###endpoint = self.R0*self._findSeparatrix(theta) # Assuming we are only interested in closed field lines, this avoids duplicating heuristics in _findSeparatrix
+
+        # Need to find an endpoint with positive psi
+        if not rguess:
+            rguess = ( 2.*(self.R0*self.epsi-(self.Raxis-self.R0)*numpy.cos(theta))*numpy.cos(theta)**2 # catch inner and outer equatorial points which are at 1+epsi for theta=0 and 1-epsi for theta=2pi
+                       + 2.*(self.R0*self.kapp*self.epsi-self.Zaxis*numpy.sin(theta))*numpy.sin(theta)**2 # catch high point and low point which are at kapp*epsi and -kapp*epsi
+                     )
+        if rguess*numpy.cos(theta)<-self.Raxis:
+            #print("option A")
+            # Avoid having R=0.
+            rguess = -.999*self.Raxis/numpy.cos(theta)
+        if PsiAtTheta(rguess)*self.Psiaxis<0.: # psi changes sign
+            #print("option B")
+            endpoint = rguess
         else:
-            result = scipy.optimize.minimize_scalar(lambda r: PsiAtTheta(r), bounds=(0.,self.R0),method='bounded')
-            endpoint = result.x
+            #print("option C, rguess:",rguess)
+            result = scipy.optimize.minimize_scalar(lambda r: PsiAtTheta(r)/self.Psiaxis, bounds=(0.,rguess),method='bounded')
+            r_max = result.x
+            Psi_max = PsiAtTheta(r_max)
+            endpoint = r_max
+
+        #print("")
+        #aval = self._findSeparatrix(theta)
+        #psia = self._psi_xy()(1.+aval*numpy.cos(theta),aval*numpy.sin(theta))
+        #print("aval",aval)
+        #print("psia",psia)
+        #print("Psia",Psi(self.R0*(1.+aval*numpy.cos(theta)),self.R0*aval*numpy.sin(theta)))
+        #print("")
+        #print("endpoint",endpoint)
+        #print("theta",theta)
+        #print("Psi at 0:",PsiAtTheta(0.),PsiAtTheta(0.)-PsiGrid[0])
+        #print("Psi at endpoint:",PsiAtTheta(endpoint),PsiAtTheta(endpoint)-PsiGrid[0])
+        ##print("Psi near endpoint",PsiAtTheta(endpoint-.1),PsiAtTheta(endpoint+.1))
+        #print("PsiGrid",PsiGrid)
+        #print("PsiNGrid",psiNGrid)
+        #print("Psiaxis",self.Psiaxis)
+        #print("RAxis",self.Raxis)
+        #print("ZAxis",self.Zaxis)
+
         rGrid = numpy.zeros(PsiGrid.size)
         for i,PsiVal in enumerate(PsiGrid):
             rGrid[i] = scipy.optimize.brentq(lambda r: PsiAtTheta(r)-PsiVal,0.,endpoint)
