@@ -204,9 +204,8 @@ class CerfonFreidbergSymmetric:
         psi = self.psi_xy()
         for i in range(100):
             psiArray[:,i] = psi(x1[i],y1)
-        _, _, psiAxis = self.getAxis()
-        psi_min = min(-.1*psiAxis, psiAxis)
-        psi_max = max(-.1*psiAxis, psiAxis)
+        psi_min = min(-.1*self.Psiaxis, self.Psiaxis)
+        psi_max = max(-.1*self.Psiaxis, self.Psiaxis)
         pyplot.contour(x1,y1,psiArray,numpy.linspace(psi_min,psi_max,15))
         pyplot.show()
 
@@ -221,15 +220,15 @@ class CerfonFreidbergSymmetric:
         return lambda R,Z: self.Psi0*self.dpsidy_xy()(R/self.R0,Z/self.R0)/self.R0
 
     def getAxis(self):
-        if not self.Raxis or not self.Zaxis or not self.PsiAxis:
+        if not self.Raxis or not self.Zaxis or not self.Psiaxis:
             result = scipy.optimize.minimize(lambda posArray: self.psi_xy()(posArray[0],posArray[1]),[1.,0.])
             x = result.x[0]
             y = result.x[1]
             psi = self.psi_xy()(x,y)
             self.Raxis = x*self.R0
             self.Zaxis = y*self.R0
-            self.PsiAxis = psi*self.Psi0
-        return self.Raxis, self.Zaxis, self.PsiAxis
+            self.Psiaxis = psi*self.Psi0
+        return self.Raxis, self.Zaxis, self.Psiaxis
 
     def psi_xy(self):
         # normalised form
