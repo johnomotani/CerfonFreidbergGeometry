@@ -204,8 +204,10 @@ class CerfonFreidbergSymmetric:
         psi = self.psi_xy()
         for i in range(100):
             psiArray[:,i] = psi(x1[i],y1)
-        psiAxis = psiArray.min()
-        pyplot.contour(x1,y1,psiArray,numpy.linspace(-.1*psiAxis,psiAxis,15))
+        _, _, psiAxis = self.getAxis()
+        psi_min = min(-.1*psiAxis, psiAxis)
+        psi_max = max(-.1*psiAxis, psiAxis)
+        pyplot.contour(x1,y1,psiArray,numpy.linspace(psi_min,psi_max,15))
         pyplot.show()
 
     def Psi(self):
