@@ -34,12 +34,15 @@ def write_2d(val, out):
         for y in range(ny):
             out.write(val[x,y])
     
-def write(eq, fh, nx=65, ny=65):
+def write(eq, fh, nx=65, ny=65, wall=None):
     """
     Write a GEQDSK equilibrium file, given a CerfonFreidberg equilibrium object
     
     eq - CerfonFreidberg object
     fh - file handle
+    nx
+    ny
+    wall - optional list of (r, z) pairs giving location of wall
     
     """
     
@@ -112,7 +115,16 @@ def write(eq, fh, nx=65, ny=65):
     
     if co.counter != 0:
         fh.write("\n")
-    fh.write("   0   0\n")
+    if wall is not None:
+        nlim = len(wall)
+    else:
+        nlim = 0
+    fh.write("{0:5d}{1:5d}\n".format(0, nlim))
+    for r, z in wall:
+        co.write(r)
+        co.write(z)
+    if co.counter != 0:
+        fh.write("\n")
 
 if __name__ == "__main__":
     # Test case
